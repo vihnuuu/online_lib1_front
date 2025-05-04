@@ -8,6 +8,7 @@ import LoginPage from './pages/LoginPage';
 import BookDetailsPage from './pages/BookDetailsPage';
 import UploadPage from './pages/UploadPage';
 import AboutUsPage from './pages/AboutUsPage';
+import ContactUsPage from './pages/ContactUsPage';
 import RequireAuth from './components/RequireAuth';
 import Navbar from './components/Navbar';
 
@@ -22,7 +23,7 @@ const App: React.FC = () => {
                 <Route path="/signup" element={<RegisterPage />} />
                 <Route path="/login" element={<LoginPage />} />
                 <Route path="/about" element={<AboutUsPage />} />
-
+                <Route path="/contact" element={<ContactUsPage />} />
                 {/* Захищений маршрут */}
                 <Route path="/upload" element={
                     <RequireAuth roles={['admin']}>

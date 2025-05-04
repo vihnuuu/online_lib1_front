@@ -8,6 +8,9 @@ const BooksPage = () => {
     const [books, setBooks] = useState([]);
     const [loading, setLoading] = useState(true);
 
+    // Отримуємо роль користувача з localStorage
+    const userRole = localStorage.getItem('userRole');
+    const isAdmin = userRole === 'admin';
 
     const fetchBooks = async (filters = {}) => {
         setLoading(true);
@@ -25,7 +28,11 @@ const BooksPage = () => {
             <div style={styles.wrapper}>
                 <div style={styles.header}>
                     <h1 style={styles.title}>Бібліотека книг</h1>
-                    <Link to="/books/new" style={styles.addButton}>Додати книгу</Link>
+                    {isAdmin && (
+                        <Link to="/books/new" style={styles.addButton}>
+                            Додати книгу
+                        </Link>
+                    )}
                 </div>
 
                 <div style={styles.filters}>

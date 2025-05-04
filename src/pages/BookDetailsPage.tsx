@@ -1,7 +1,6 @@
 import React, { useEffect, useState } from 'react';
 import { useParams } from 'react-router-dom';
 import { getBookById } from '../services/bookService';
-import Navbar from '../components/Navbar';
 
 interface Book {
     id: string;
@@ -26,8 +25,6 @@ const BookDetailsPage: React.FC = () => {
 
     return (
         <div style={styles.page}>
-            <Navbar />
-
             <div style={styles.container}>
                 <h1 style={styles.title}>{book.title}</h1>
                 <p style={styles.meta}>
