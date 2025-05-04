@@ -5,8 +5,7 @@
     align-items: center;
     background-color: var(--bg-color);
     padding: 1rem 2rem;
-    box-shadow: 0 4px 8px rgba(0, 0, 0, 0.1);
-    max-width: 1200px;  /* Збільшуємо максимальну ширину */
+    box-shadow: 0 4px 8px rgba(0, 0, 0, 0.1); /* Збільшуємо максимальну ширину */
     width: 100%;
     margin: 0 auto; /* Центруємо навбар */
 }

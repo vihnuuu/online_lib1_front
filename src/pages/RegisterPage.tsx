@@ -1,8 +1,10 @@
 import React, { useState } from 'react';
 import axios from 'axios';
 import { useNavigate } from 'react-router-dom';
+import { useTheme } from '../hooks/useTheme';
 
 const RegisterPage = () => {
+    useTheme();
     const navigate = useNavigate();
 
     const [formData, setFormData] = useState({
@@ -34,9 +36,9 @@ const RegisterPage = () => {
     };
 
     return (
-        <div style={styles.container}>
-            <h2 style={styles.title}>Sign Up</h2>
-            <form onSubmit={handleSubmit} style={styles.form}>
+        <div className="card" style={{ maxWidth: '500px', margin: '5rem auto' }}>
+            <h2 style={{ textAlign: 'center' }}>Sign Up</h2>
+            <form onSubmit={handleSubmit} style={{ display: 'flex', flexDirection: 'column', gap: '1rem', marginTop: '1rem' }}>
                 <input
                     type="text"
                     name="name"
@@ -44,7 +46,6 @@ const RegisterPage = () => {
                     value={formData.name}
                     onChange={handleChange}
                     required
-                    style={styles.input}
                 />
                 <input
                     type="email"
@@ -53,7 +54,6 @@ const RegisterPage = () => {
                     value={formData.email}
                     onChange={handleChange}
                     required
-                    style={styles.input}
                 />
                 <input
                     type="password"
@@ -62,76 +62,16 @@ const RegisterPage = () => {
                     value={formData.password}
                     onChange={handleChange}
                     required
-                    style={styles.input}
                 />
-                <button type="submit" style={styles.button}>Sign Up</button>
+                <button type="submit">Sign Up</button>
             </form>
-            {error && <p style={{ ...styles.message, color: 'red' }}>{error}</p>}
-            {success && <p style={{ ...styles.message, color: 'green' }}>{success}</p>}
-            <div style={styles.loginPrompt}>
-                <p>Already have an account?<a href="/login" style={styles.loginLink}> Log in</a></p>
+            {error && <p style={{ color: 'red', textAlign: 'center' }}>{error}</p>}
+            {success && <p style={{ color: 'green', textAlign: 'center' }}>{success}</p>}
+            <div style={{ textAlign: 'center', marginTop: '1rem' }}>
+                <p>Already have an account?<a href="/login" style={{ marginLeft: '0.5rem' }}>Log in</a></p>
             </div>
         </div>
     );
-};
-
-const styles: { [key: string]: React.CSSProperties } = {
-    container: {
-        maxWidth: '600px', // Increased width for a larger form
-        margin: '5rem auto',
-        padding: '2.5rem', // Added more padding for better spacing
-        border: '1px solid #ccc',
-        borderRadius: '8px',
-        backgroundColor: 'var(--card-bg)',
-        color: 'var(--text-color)',
-        boxShadow: '0 4px 10px rgba(0, 0, 0, 0.1)',
-    },
-    title: {
-        textAlign: 'center',
-        marginBottom: '1.5rem', // Added more margin
-        fontSize: '2.5rem', // Increased font size for the title
-        fontWeight: 'bold',
-    },
-    form: {
-        display: 'flex',
-        flexDirection: 'column',
-        gap: '1.5rem',
-    },
-    input: {
-        padding: '1rem', // Increased padding for inputs
-        fontSize: '1.2rem', // Slightly larger text
-        borderRadius: '6px',
-        border: '1px solid #aaa',
-        outline: 'none',
-        transition: 'border-color 0.3s',
-    },
-    button: {
-        padding: '1rem', // Larger button
-        fontSize: '1.2rem',
-        backgroundColor: '#6a8caf',
-        color: '#fff',
-        border: 'none',
-        borderRadius: '6px',
-        cursor: 'pointer',
-        transition: 'background-color 0.3s',
-    },
-    buttonHover: {
-        backgroundColor: '#557fa6',
-    },
-    message: {
-        marginTop: '1rem',
-        textAlign: 'center',
-        fontSize: '1rem',
-    },
-    loginPrompt: {
-        marginTop: '1.5rem',
-        textAlign: 'center',
-    },
-    loginLink: {
-        color: '#6a8caf',
-        textDecoration: 'none',
-        fontWeight: 'bold',
-    }
 };
 
 export default RegisterPage;
