@@ -1,0 +1,78 @@
+/* Базовий reset */
+*, *::before, *::after {
+    box-sizing: border-box;
+    margin: 0;
+    padding: 0;
+}
+
+/* Загальні стилі для обох тем */
+body {
+    font-family: 'Segoe UI', Tahoma, Geneva, Verdana, sans-serif;
+    line-height: 1.6;
+    transition: background-color 0.3s ease, color 0.3s ease;
+    min-height: 100vh;
+    width: 100%;
+}
+
+/* ---------- 🌞 БЕЖЕВА (light) ТЕМА ---------- */
+body[data-theme='light'] {
+    --bg-color: #fdf6ec;             /* фон сторінки */
+    --text-color: #3e3e3e;           /* основний текст */
+    --card-bg: #fffaf3;              /* фон карток */
+    --card-border: #e6dbc9;          /* обводка */
+    --button-bg: #e8d5ba;            /* кнопка */
+    --button-text: #3e3e3e;          /* текст кнопки */
+    --button-hover-bg: #dbc5a8;      /* ховер кнопки */
+    --input-bg: #fffaf3;             /* поле вводу */
+    --input-border: #d5c7b2;
+}
+
+/* ---------- 🌚 ТЕМНА (dark) ТЕМА ---------- */
+body[data-theme='dark'] {
+    --bg-color: #121212;     /* фон сторінки */
+    --text-color: #ffffff;  /* основний текст */
+    --card-bg: #1e1e1e;    /* фон карток */
+    --card-border: #444444;  /* обводка */
+    --button-bg: #1f1f1f;   /* кнопка */
+    --button-text: #ffffff;  /* текст кнопки */
+    --button-hover-bg: #333333;   /* ховер кнопки */
+    --input-bg: #1e1e1e; /* поле вводу */
+    --input-border: #333333;
+}
+
+/* ---------- 🌐 Використання змінних ---------- */
+body {
+    background-color: var(--bg-color);
+    color: var(--text-color);
+}
+
+button {
+    background-color: var(--button-bg);
+    color: var(--button-text);
+    border: 1px solid transparent;
+    border-radius: 8px;
+    padding: 0.5rem 1rem;
+    font-size: 1rem;
+    cursor: pointer;
+    transition: background-color 0.3s;
+}
+button:hover {
+    background-color: var(--button-hover-bg);
+}
+
+input {
+    background-color: var(--input-bg);
+    color: var(--text-color);
+    border: 1px solid var(--input-border);
+    padding: 0.4rem 0.6rem;
+    border-radius: 4px;
+    font-size: 1rem;
+}
+
+.card {
+    background-color: var(--card-bg);
+    color: var(--text-color);
+    border: 1px solid var(--card-border);
+    border-radius: 8px;
+    padding: 1rem;
+}

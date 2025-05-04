@@ -1,0 +1,98 @@
+/* Загальний стиль для Navbar */
+.navbar {
+    display: flex;
+    justify-content: space-between;
+    align-items: center;
+    background-color: var(--bg-color);
+    padding: 1rem 2rem;
+    box-shadow: 0 4px 8px rgba(0, 0, 0, 0.1);
+    max-width: 1200px;  /* Збільшуємо максимальну ширину */
+    width: 100%;
+    margin: 0 auto; /* Центруємо навбар */
+}
+
+/* Логотип */
+.navbar .logo h2 {
+    color: var(--text-color);
+    font-size: 2rem;
+    margin: 0;
+}
+
+/* Меню */
+.navbar .menu {
+    display: flex;
+    gap: 1.5rem;
+    align-items: center;
+}
+
+/* Список пунктів меню */
+.navbar .menu ul {
+    display: flex;
+    gap: 1.5rem;
+    list-style: none;
+}
+
+/* Силочка меню */
+.navbar .menu .nav-link {
+    color: var(--text-color);
+    text-decoration: none;
+    font-size: 1.1rem;
+    transition: color 0.3s ease;
+}
+
+/* Ховер для меню */
+.navbar .menu .nav-link:hover {
+    color: var(--button-hover-bg);
+}
+
+/* Кнопка logout */
+.navbar .menu .logout-button {
+    background: none;
+    border: none;
+    color: var(--text-color);
+    cursor: pointer;
+    font-size: 1rem;
+}
+
+/* Кнопка зміни теми */
+.navbar .theme-toggle {
+    background: none;
+    border: none;
+    color: var(--text-color);
+    cursor: pointer;
+    font-size: 1rem;
+    display: flex;
+    align-items: center;
+    gap: 0.5rem;
+}
+
+/* Адаптивне меню для мобільних пристроїв */
+@media (max-width: 768px) {
+    .navbar .menu ul {
+        flex-direction: column;
+        align-items: flex-start;
+    }
+
+    /* Зменшення розміру шрифтів на мобільних */
+    .navbar .menu .nav-link {
+        font-size: 1rem;
+    }
+}
+
+/* Для світлої теми */
+body[data-theme='light'] {
+    --bg-color: #fdf6ec;
+    --text-color: #3e3e3e;
+    --button-bg: #e8d5ba;
+    --button-text: #3e3e3e;
+    --button-hover-bg: #dbc5a8;
+}
+
+/* Для темної теми */
+body[data-theme='dark'] {
+    --bg-color: #121212;
+    --text-color: #ffffff;
+    --button-bg: #1f1f1f;
+    --button-text: #ffffff;
+    --button-hover-bg: #333333;
+}

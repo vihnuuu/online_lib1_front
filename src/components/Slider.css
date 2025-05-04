@@ -1,0 +1,32 @@
+.slider-container {
+    display: flex;
+    height: 800px;
+    overflow-x: scroll;
+    gap: 1rem;
+    padding: 1rem;
+}
+
+.slider-item {
+    flex-shrink: 0;
+    width: 80%;
+    border-radius: 8px;
+    overflow: hidden;
+    position: relative;
+}
+
+.slider-item img {
+    width: 100%;
+    height: 200px;
+    object-fit: cover;
+}
+
+.slider-item p {
+    position: absolute;
+    bottom: 10px;
+    left: 10px;
+    color: white;
+    font-size: 1.5rem;
+    background-color: rgba(0, 0, 0, 0.5);
+    padding: 0.5rem;
+    border-radius: 5px;
+}

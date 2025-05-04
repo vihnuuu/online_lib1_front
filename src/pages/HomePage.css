@@ -1,0 +1,111 @@
+/* Загальні стилі для головної сторінки */
+.home-page {
+    background-color: var(--bg-color);
+    color: var(--text-color);
+    font-family: 'Segoe UI', Tahoma, Geneva, Verdana, sans-serif;
+    padding: 2rem 1rem;
+    min-height: 100vh;
+    display: flex;
+    flex-direction: column;
+    align-items: center;
+    gap: 3rem;
+}
+
+/* Збільшення ширини контейнера */
+.home-page .container {
+    max-width: 1200px; /* Збільшити максимальну ширину */
+    width: 100%;
+}
+
+/* Стиль для секції введення (intro) */
+.intro {
+    text-align: center;
+    padding: 3rem;
+    background-color: var(--card-bg);
+    border-radius: 10px;
+    box-shadow: 0 4px 8px rgba(0, 0, 0, 0.1);
+    width: 100%;
+    max-width: 1200px;  /* Збільшуємо ширину */
+}
+
+/* Заголовок секції intro */
+.intro-title {
+    font-size: 3rem;
+    font-weight: bold;
+    color: var(--text-color);
+    margin-bottom: 1rem;
+}
+
+/* Опис секції intro */
+.intro-description {
+    font-size: 1.4rem;
+    margin-bottom: 2rem;
+}
+
+/* Кнопка переходу до книг */
+.explore-button {
+    background-color: var(--button-bg);
+    color: var(--button-text);
+    padding: 0.8rem 2rem;
+    font-size: 1rem;
+    border-radius: 5px;
+    text-decoration: none;
+    transition: background-color 0.3s;
+}
+
+/* Ховер для кнопки */
+.explore-button:hover {
+    background-color: var(--button-hover-bg);
+}
+
+/* Стиль для секції слайдера */
+.slider-section {
+    width: 100%;
+    text-align: center;
+}
+
+/* Заголовок секції слайдера */
+.section-title {
+    font-size: 2.5rem;
+    font-weight: bold;
+    margin-bottom: 2rem;
+}
+
+/* Стиль для секції про нас */
+.about-us {
+    width: 100%;
+    text-align: center;
+    padding: 3rem;
+    background-color: var(--card-bg);
+    border-radius: 10px;
+    box-shadow: 0 4px 8px rgba(0, 0, 0, 0.1);
+}
+
+/* Опис секції про нас */
+.about-us-description {
+    font-size: 1.3rem;
+    color: var(--text-color);
+}
+
+/* Адаптивність для мобільних пристроїв */
+@media (max-width: 768px) {
+    .intro-title {
+        font-size: 2rem;
+    }
+
+    .intro-description {
+        font-size: 1rem;
+    }
+
+    .explore-button {
+        padding: 0.6rem 1.5rem;
+    }
+
+    .section-title {
+        font-size: 2rem;
+    }
+
+    .about-us-description {
+        font-size: 1rem;
+    }
+}
