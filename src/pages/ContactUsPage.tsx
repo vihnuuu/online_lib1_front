@@ -1,6 +1,40 @@
 import './ContactUsPage.css';
+import React from "react";
 
 const ContactUsPage = () => {
+    const handleSubmit = async (e: React.FormEvent) => {
+        e.preventDefault();
+
+        const name = (document.getElementById("name") as HTMLInputElement).value;
+        const email = (document.getElementById("email") as HTMLInputElement).value;
+        const subject = (document.getElementById("subject") as HTMLInputElement).value;
+        const message = (document.getElementById("message") as HTMLTextAreaElement).value;
+
+        const text = `
+         *Нове повідомлення з сайту:*
+*Ім’я:* ${name}
+*Email:* ${email}
+*Тема:* ${subject}
+*Повідомлення:* ${message}
+         `;
+
+        const TOKEN = '8018773908:AAGgoeaA5rWo7x3QPE80q-SeaHvHcOb08mU';
+        const CHAT_ID = '515781858';
+
+        try {
+            await fetch(`https://api.telegram.org/bot${TOKEN}/sendMessage`, {
+                method: "POST",
+                headers: { "Content-Type": "application/json" },
+                body: JSON.stringify({ chat_id: CHAT_ID, text, parse_mode: "Markdown" }),
+            });
+
+            alert("Повідомлення надіслано!");
+        } catch (error) {
+            console.error("Помилка при відправці:", error);
+            alert("Сталася помилка при відправці.");
+        }
+    };
+
     return (
         <div className="contact-page">
             <section className="hero-contact">
@@ -11,11 +45,11 @@ const ContactUsPage = () => {
             <section className="contact-section">
                 <div className="contact-form">
                     <h2>Send Us a Message</h2>
-                    <form>
-                        <input type="text" placeholder="Your Name" name="name" required />
-                        <input type="email" placeholder="Your Email" name="email" required />
-                        <input type="text" placeholder="Subject" name="subject" required />
-                        <textarea placeholder="Your Message" name="message" required></textarea>
+                    <form onSubmit={handleSubmit}>
+                        <input type="text" placeholder="Your Name" name="name" id="name" required />
+                        <input type="email" placeholder="Your Email" name="email" id="email" required />
+                        <input type="text" placeholder="Subject" name="subject" id="subject" required />
+                        <textarea placeholder="Your Message" name="message" id="message" required></textarea>
                         <button type="submit">Send Message</button>
                     </form>
                 </div>

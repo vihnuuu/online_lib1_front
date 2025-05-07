@@ -25,6 +25,8 @@ body[data-theme='light'] {
     --button-hover-bg: #dbc5a8;      /* ховер кнопки */
     --input-bg: #fffaf3;             /* поле вводу */
     --input-border: #d5c7b2;
+    --bg-image: url('https://i.pinimg.com/736x/f5/11/d2/f511d24924560f076bd2bb8a2e6641ab.jpg'); /* або відповідний шлях до картинки */
+
 }
 
 /* ---------- 🌚 ТЕМНА (dark) ТЕМА ---------- */
@@ -38,6 +40,7 @@ body[data-theme='dark'] {
     --button-hover-bg: #333333;   /* ховер кнопки */
     --input-bg: #1e1e1e; /* поле вводу */
     --input-border: #333333;
+    --bg-image:  url('https://i.pinimg.com/736x/49/79/af/4979afd53d498b106381ad57cdca46bb.jpg');
 }
 
 /* ---------- 🌐 Використання змінних ---------- */

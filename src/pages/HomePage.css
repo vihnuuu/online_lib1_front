@@ -1,111 +1,110 @@
-/* Загальні стилі для головної сторінки */
 .home-page {
     background-color: var(--bg-color);
     color: var(--text-color);
     font-family: 'Segoe UI', Tahoma, Geneva, Verdana, sans-serif;
-    padding: 2rem 1rem;
-    min-height: 100vh;
+}
+
+/* Вступна секція зі спліт-макетом */
+.intro.split-layout {
+    display: flex;
+    flex-wrap: wrap;
+    align-items: stretch;
+    min-height: 80vh;
+    padding: 0;
+}
+
+/* Ліва панель з текстом */
+.left-panel {
+    flex: 1 1 50%;
+    padding: 4rem 2rem;
     display: flex;
     flex-direction: column;
-    align-items: center;
-    gap: 3rem;
+    justify-content: center;
+    background-color: var(--bg-color);
 }
 
-/* Збільшення ширини контейнера */
-.home-page .container {
-    max-width: 1200px; /* Збільшити максимальну ширину */
-    width: 100%;
-}
-
-/* Стиль для секції введення (intro) */
-.intro {
-    text-align: center;
-    padding: 3rem;
-    background-color: var(--card-bg);
-    border-radius: 10px;
-    box-shadow: 0 4px 8px rgba(0, 0, 0, 0.1);
-    width: 100%;
-    max-width: 1200px;  /* Збільшуємо ширину */
-}
-
-/* Заголовок секції intro */
 .intro-title {
-    font-size: 3rem;
-    font-weight: bold;
-    color: var(--text-color);
+    font-size: 2.8rem;
     margin-bottom: 1rem;
 }
 
-/* Опис секції intro */
 .intro-description {
-    font-size: 1.4rem;
-    margin-bottom: 2rem;
-}
-
-/* Кнопка переходу до книг */
-.explore-button {
-    background-color: var(--button-bg);
-    color: var(--button-text);
-    padding: 0.8rem 2rem;
-    font-size: 1rem;
-    border-radius: 5px;
-    text-decoration: none;
-    transition: background-color 0.3s;
-}
-
-/* Ховер для кнопки */
-.explore-button:hover {
-    background-color: var(--button-hover-bg);
-}
-
-/* Стиль для секції слайдера */
-.slider-section {
-    width: 100%;
-    text-align: center;
-}
-
-/* Заголовок секції слайдера */
-.section-title {
-    font-size: 2.5rem;
-    font-weight: bold;
-    margin-bottom: 2rem;
-}
-
-/* Стиль для секції про нас */
-.about-us {
-    width: 100%;
-    text-align: center;
-    padding: 3rem;
-    background-color: var(--card-bg);
-    border-radius: 10px;
-    box-shadow: 0 4px 8px rgba(0, 0, 0, 0.1);
-}
-
-/* Опис секції про нас */
-.about-us-description {
     font-size: 1.3rem;
-    color: var(--text-color);
+    margin-bottom: 2rem;
 }
 
-/* Адаптивність для мобільних пристроїв */
-@media (max-width: 768px) {
-    .intro-title {
-        font-size: 2rem;
-    }
+.short-links .link-button {
+    display: inline-block;
+    background-color: var(--button-bg);
+    color: white;
+    padding: 0.7rem 1.3rem;
+    border-radius: 6px;
+    text-decoration: none;
+    margin-bottom: 0.5rem;
+    transition: background-color 0.3s ease;
+}
 
-    .intro-description {
-        font-size: 1rem;
-    }
+.short-links .link-button:hover {
+    background-color: #6a4f3a;
+}
 
-    .explore-button {
-        padding: 0.6rem 1.5rem;
-    }
+.small-info {
+    font-size: 0.95rem;
+    color: var(--text-muted, #777);
+}
 
-    .section-title {
-        font-size: 2rem;
-    }
+/* Права панель з фоном */
+.right-panel.intro-image {
+    flex: 1 1 50%;
+    background-image: var(--bg-image);
+    background-size: cover;
+    background-position: center;
+}
 
-    .about-us-description {
-        font-size: 1rem;
-    }
+/* Фічі */
+.features {
+    display: flex;
+    justify-content: center;
+    flex-wrap: wrap;
+    gap: 2rem;
+    padding: 3rem 1rem;
+    background-color: var(--card-bg);
+}
+
+.feature-card {
+    flex: 1 1 250px;
+    background-color: var(--bg-color);
+    color: var(--text-color);
+    padding: 2rem;
+    border-radius: 10px;
+    box-shadow: 0 2px 10px rgba(0, 0, 0, 0.1);
+    text-align: center;
+    transition: transform 0.3s ease;
+}
+
+.feature-card:hover {
+    transform: translateY(-5px);
+}
+
+/* Про нас */
+.about-us {
+    padding: 4rem 1rem;
+    text-align: center;
+}
+
+.section-title {
+    font-size: 2.2rem;
+    margin-bottom: 1rem;
+}
+
+.about-us-description {
+    font-size: 1.2rem;
+    max-width: 700px;
+    margin: 0 auto;
+    line-height: 1.6;
+}
+
+/* Темна тема (якщо використовується toggle theme) */
+body.dark .right-panel.intro-image {
+    filter: brightness(0.8);
 }

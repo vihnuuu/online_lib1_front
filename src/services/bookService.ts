@@ -28,8 +28,8 @@ export const getBooks = async (filters?: {
 };
 
 // Отримати деталі книги за ID
-export const getBookById = async (id: string) => {
-    const response = await axiosInstance.get(`${API_URL}/${id}`);
+export const getBookById = async (bookId: string) => {
+    const response = await axiosInstance.get(`/books/${bookId}`);
     return response.data;
 };
 

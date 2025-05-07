@@ -17,6 +17,12 @@
     margin: 0;
 }
 
+.nav-logo {
+    text-decoration: none;
+    color: inherit;
+}
+
+
 /* Меню */
 .navbar .menu {
     display: flex;
@@ -95,3 +101,22 @@ body[data-theme='dark'] {
     --button-text: #ffffff;
     --button-hover-bg: #333333;
 }
+.navbar .menu .logout-button {
+    background: none;
+    border: none;
+    padding: 0;
+    margin: 0;
+    font: inherit;
+    font-size: 1.1rem;
+    font-weight: 500;
+    color: var(--text-color);
+    cursor: pointer;
+    text-decoration: none;
+    transition: color 0.3s ease;
+    display: inline; /* важливо для вирівнювання */
+}
+
+.navbar .menu .logout-button:hover {
+    color: var(--button-hover-bg);
+}
+

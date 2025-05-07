@@ -8,9 +8,14 @@ import LoginPage from './pages/LoginPage';
 import BookDetailsPage from './pages/BookDetailsPage';
 import UploadPage from './pages/UploadPage';
 import AboutUsPage from './pages/AboutUsPage';
+import MyProgressPage from './pages/MyProgressPage';
 import ContactUsPage from './pages/ContactUsPage';
 import RequireAuth from './components/RequireAuth';
 import Navbar from './components/Navbar';
+import Footer from './components/Footer';
+import AdminPanel from './pages/AdminPanel/AdminPanel';
+
+
 
 const App: React.FC = () => {
     return (
@@ -24,13 +29,31 @@ const App: React.FC = () => {
                 <Route path="/login" element={<LoginPage />} />
                 <Route path="/about" element={<AboutUsPage />} />
                 <Route path="/contact" element={<ContactUsPage />} />
+
+                <Route path="/reading-progress" element={
+                    <RequireAuth roles={['user', 'admin']}>
+                        <MyProgressPage />
+                    </RequireAuth>
+                } />
+
                 {/* Захищений маршрут */}
                 <Route path="/upload" element={
                     <RequireAuth roles={['admin']}>
                         <UploadPage />
                     </RequireAuth>
                 } />
+                <Route
+                    path="/admin"
+                    element={
+                        <RequireAuth roles={['admin']}>
+                            <AdminPanel />
+                        </RequireAuth>
+                    }
+                />
+
+
             </Routes>
+            <Footer />
         </Router>
     );
 };

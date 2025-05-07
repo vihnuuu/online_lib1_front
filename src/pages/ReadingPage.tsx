@@ -1,57 +1,64 @@
-import React, { useEffect, useState } from 'react';
-import { getBookDetails } from '../services/bookService';
+import { useEffect, useState } from 'react';
+import { getBookById } from '../services/bookService';
 import { useParams } from 'react-router-dom';
 import { updateReadingProgress } from '../services/readingService';
 import './ReadingPage.css';
 
+interface Book {
+    id: string;
+    title: string;
+    author: string;
+    description: string;
+    totalPages: number;
+}
+
 const ReadingPage = () => {
-    const { bookId } = useParams();
-    const [book, setBook] = useState<any>(null);
-    const [page, setPage] = useState(0); // Початковий номер сторінки
-    const [progress, setProgress] = useState(0); // Прогрес читання (відсотки)
+    const { bookId } = useParams<{ bookId: string }>();
+    const [book, setBook] = useState<Book | null>(null);
+    const [page, setPage] = useState<number>(0);
+    const [progress, setProgress] = useState<number>(0);
 
     useEffect(() => {
         const fetchBook = async () => {
-            const bookData = await getBookDetails(bookId);
-            setBook(bookData);
+            if (bookId) {
+                const bookData = await getBookById(bookId);
+                setBook(bookData);
+            }
         };
 
         fetchBook();
     }, [bookId]);
 
     useEffect(() => {
+        if (!book || !book.totalPages) return;
+
         const savedProgress = localStorage.getItem(`progress-${bookId}`);
         if (savedProgress) {
-            setPage(parseInt(savedProgress));
-            setProgress(Math.round((page / book?.totalPages) * 100));
+            const savedPage = parseInt(savedProgress);
+            setPage(savedPage);
+            setProgress(Math.round((savedPage / book.totalPages) * 100));
         }
-    }, [bookId, page]);
+    }, [book, bookId]);
 
     const handleNextPage = () => {
+        if (!book) return;
         if (page < book.totalPages - 1) {
             const newPage = page + 1;
             setPage(newPage);
             setProgress(Math.round((newPage / book.totalPages) * 100));
-
-            // Збереження прогресу
             localStorage.setItem(`progress-${bookId}`, newPage.toString());
-
-            // Оновлення через сервіс
-            updateReadingProgress(bookId, newPage);
+            void updateReadingProgress(bookId!, newPage); // позбавляємось warning'у
         }
     };
 
     const handlePreviousPage = () => {
+        if (!book) return;
         if (page > 0) {
             const newPage = page - 1;
             setPage(newPage);
             setProgress(Math.round((newPage / book.totalPages) * 100));
-
-            // Збереження прогресу
             localStorage.setItem(`progress-${bookId}`, newPage.toString());
-
-            // Оновлення через сервіс
-            updateReadingProgress(bookId, newPage);
+            void updateReadingProgress(bookId!, newPage);
         }
     };
 

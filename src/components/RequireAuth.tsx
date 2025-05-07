@@ -3,19 +3,19 @@ import { Navigate } from 'react-router-dom';
 
 interface Props {
     children: React.ReactNode;
-    roles?: string[]; // ['admin'], ['user'], тощо
+    roles?: string[]; // ['admin'], ['user']
 }
 
 const RequireAuth: React.FC<Props> = ({ children, roles }) => {
-    const token = localStorage.getItem('token'); // або sessionStorage
-    const userRole = localStorage.getItem('role'); // зберігаємо при логіні
+    const token = localStorage.getItem('accessToken');
+    const userRole = localStorage.getItem('role');
 
     if (!token) {
-        return <Navigate to="/login" />;
+        return <Navigate to="/login" replace />;
     }
 
-    if (roles && !roles.includes(userRole || '')) {
-        return <Navigate to="/" />;
+    if (roles && (!userRole || !roles.includes(userRole))) {
+        return <Navigate to="/" replace />;
     }
 
     return <>{children}</>;

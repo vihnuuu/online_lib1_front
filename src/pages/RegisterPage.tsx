@@ -3,6 +3,7 @@ import axios from 'axios';
 import { useNavigate } from 'react-router-dom';
 import { useTheme } from '../hooks/useTheme';
 
+
 const RegisterPage = () => {
     useTheme();
     const navigate = useNavigate();
@@ -25,6 +26,13 @@ const RegisterPage = () => {
         setError('');
         setSuccess('');
 
+        const emailRegex = /^[^\s@]+@[^\s@]+\.[^\s@]+$/;
+
+        if (!emailRegex.test(formData.email)) {
+            setError('Invalid email format');
+            return;
+        }
+
         try {
             await axios.post('http://localhost:3000/api/users/register', formData);
             setSuccess('Registration successful! Redirecting...');
@@ -35,8 +43,10 @@ const RegisterPage = () => {
         }
     };
 
+
     return (
-        <div className="card" style={{ maxWidth: '500px', margin: '5rem auto' }}>
+        <div className="login-page">
+        <div className="card login-card" >
             <h2 style={{ textAlign: 'center' }}>Sign Up</h2>
             <form onSubmit={handleSubmit} style={{ display: 'flex', flexDirection: 'column', gap: '1rem', marginTop: '1rem' }}>
                 <input
@@ -70,6 +80,7 @@ const RegisterPage = () => {
             <div style={{ textAlign: 'center', marginTop: '1rem' }}>
                 <p>Already have an account?<a href="/login" style={{ marginLeft: '0.5rem' }}>Log in</a></p>
             </div>
+        </div>
         </div>
     );
 };

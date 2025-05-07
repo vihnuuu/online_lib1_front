@@ -1,0 +1,50 @@
+/* MyProgressPage.css */
+
+.my-progress-page {
+    padding: 2rem;
+    background-color: var(--bg-color);
+    color: var(--text-color);
+    min-height: 100vh;
+    font-family: 'Segoe UI', Tahoma, Geneva, Verdana, sans-serif;
+}
+
+.my-progress-page h1 {
+    text-align: center;
+    font-size: 2.5rem;
+    margin-bottom: 2rem;
+}
+
+.progress-list {
+    display: flex;
+    flex-direction: column;
+    gap: 1.5rem;
+    max-width: 800px;
+    margin: 0 auto;
+}
+
+.progress-card {
+    background-color: var(--card-bg);
+    color: var(--text-color);
+    border: 1px solid var(--card-border);
+    border-radius: 8px;
+    padding: 1rem 1.5rem;
+    box-shadow: 0 4px 10px rgba(0, 0, 0, 0.08);
+    transition: background-color 0.3s, color 0.3s;
+}
+
+.progress-card h2 {
+    margin: 0 0 0.5rem 0;
+    font-size: 1.4rem;
+}
+
+.progress-card p {
+    margin: 0.3rem 0;
+    font-size: 1rem;
+}
+
+.progress-card .date {
+    font-size: 0.85rem;
+    color: var(--text-color);
+    opacity: 0.7;
+    margin-top: 0.5rem;
+}

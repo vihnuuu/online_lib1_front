@@ -27,7 +27,7 @@ const BooksPage = () => {
         <div style={styles.page}>
             <div style={styles.wrapper}>
                 <div style={styles.header}>
-                    <h1 style={styles.title}>Бібліотека книг</h1>
+                    <h1 style={styles.title}>Library of books</h1>
                     {isAdmin && (
                         <Link to="/books/new" style={styles.addButton}>
                             Додати книгу
