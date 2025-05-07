@@ -1,5 +1,5 @@
 import React, { useEffect, useState } from 'react';
-import { getAllUsers } from '../../services/userService';
+import { getAllUsers, deleteUser } from '../../services/userService';
 
 interface User {
     id: string;
@@ -12,10 +12,34 @@ const UsersTab: React.FC = () => {
     const [users, setUsers] = useState<User[]>([]);
 
     useEffect(() => {
-        getAllUsers()
-            .then(setUsers)
-            .catch(err => console.error('Error fetching users:', err));
+        fetchUsers();
     }, []);
+
+    const fetchUsers = async () => {
+        try {
+            const data = await getAllUsers();
+            setUsers(data);
+        } catch (err) {
+            console.error('Error fetching users:', err);
+            alert('Не вдалося завантажити користувачів');
+        }
+    };
+
+    const handleDelete = async (id: string) => {
+        if (!window.confirm('Ви впевнені, що хочете видалити цього користувача?')) return;
+        try {
+            await deleteUser(id);
+            setUsers(prev => prev.filter(user => user.id !== id));
+        } catch (err) {
+            console.error('Error deleting user:', err);
+            alert('Не вдалося видалити користувача');
+        }
+    };
+
+    const handleEdit = (id: string) => {
+        alert(`Редагування користувача з ID: ${id}`);
+        // Тут можна викликати модалку або перейти на сторінку редагування
+    };
 
     return (
         <div style={styles.container}>
@@ -34,6 +58,12 @@ const UsersTab: React.FC = () => {
                                 {user.role}
                             </span>
                         </p>
+                        <div style={styles.buttonGroup}>
+                            <button onClick={() => handleEdit(user.id)} style={styles.button}>Редагувати</button>
+                            <button onClick={() => handleDelete(user.id)} style={{ ...styles.button, backgroundColor: '#e74c3c' }}>
+                                Видалити
+                            </button>
+                        </div>
                     </div>
                 ))}
             </div>
@@ -76,6 +106,21 @@ const styles: { [key: string]: React.CSSProperties } = {
     role: {
         marginTop: '0.5rem',
         fontSize: '0.95rem',
+    },
+    buttonGroup: {
+        display: 'flex',
+        gap: '0.5rem',
+        marginTop: '1rem',
+    },
+    button: {
+        padding: '0.4rem 0.8rem',
+        border: 'none',
+        borderRadius: '5px',
+        cursor: 'pointer',
+        backgroundColor: 'var(--button-bg)',
+        color: 'var(--button-text)',
+        fontSize: '0.9rem',
+        transition: 'background-color 0.2s',
     },
 };
 

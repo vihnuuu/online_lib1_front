@@ -50,7 +50,6 @@ const BooksTab: React.FC = () => {
 
     return (
         <div>
-            <h2>All Books</h2>
             <div className="books-container" style={{
                 display: 'grid',
                 gridTemplateColumns: 'repeat(auto-fit, minmax(300px, 1fr))',
