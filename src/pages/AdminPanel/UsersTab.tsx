@@ -1,15 +1,22 @@
 import React, { useEffect, useState } from 'react';
-import { getAllUsers, deleteUser } from '../../services/userService';
+import { getAllUsers, deleteUser, updateUser } from '../../services/userService';
+
+interface Role {
+    id: string;
+    name: string;
+}
 
 interface User {
     id: string;
     name: string;
     email: string;
-    role: string;
+    role: Role | null;
 }
 
 const UsersTab: React.FC = () => {
     const [users, setUsers] = useState<User[]>([]);
+    const [editingUser, setEditingUser] = useState<User | null>(null);
+    const [editData, setEditData] = useState({ name: '', email: '', password: '' });
 
     useEffect(() => {
         fetchUsers();
@@ -36,9 +43,22 @@ const UsersTab: React.FC = () => {
         }
     };
 
-    const handleEdit = (id: string) => {
-        alert(`Редагування користувача з ID: ${id}`);
-        // Тут можна викликати модалку або перейти на сторінку редагування
+    const handleEdit = (user: User) => {
+        setEditingUser(user);
+        setEditData({ name: user.name, email: user.email, password: '' });
+    };
+
+    const handleSave = async () => {
+        if (!editingUser) return;
+        try {
+            await updateUser(editingUser.id, editData);
+            await fetchUsers();
+            setEditingUser(null);
+            setEditData({ name: '', email: '', password: '' });
+        } catch (err) {
+            console.error('Error updating user:', err);
+            alert('Не вдалося оновити користувача');
+        }
     };
 
     return (
@@ -52,14 +72,14 @@ const UsersTab: React.FC = () => {
                         <p style={styles.role}>
                             <strong>Role:</strong>{' '}
                             <span style={{
-                                color: user.role === 'admin' ? 'var(--accent-color)' : 'var(--text-secondary)',
+                                color: user.role?.name === 'admin' ? 'var(--accent-color)' : 'var(--text-secondary)',
                                 fontWeight: 600
                             }}>
-                                {user.role}
-                            </span>
+                {user.role?.name || '—'}
+              </span>
                         </p>
                         <div style={styles.buttonGroup}>
-                            <button onClick={() => handleEdit(user.id)} style={styles.button}>Редагувати</button>
+                            <button onClick={() => handleEdit(user)} style={styles.button}>Редагувати</button>
                             <button onClick={() => handleDelete(user.id)} style={{ ...styles.button, backgroundColor: '#e74c3c' }}>
                                 Видалити
                             </button>
@@ -67,6 +87,31 @@ const UsersTab: React.FC = () => {
                     </div>
                 ))}
             </div>
+
+            {/* Модалка редагування */}
+            {editingUser && (
+                <div style={styles.modalOverlay}>
+                    <div style={styles.modal}>
+                        <h3>Редагування користувача</h3>
+                        <label>
+                            Ім'я:
+                            <input value={editData.name} onChange={e => setEditData({ ...editData, name: e.target.value })} />
+                        </label>
+                        <label>
+                            Email:
+                            <input value={editData.email} onChange={e => setEditData({ ...editData, email: e.target.value })} />
+                        </label>
+                        <label>
+                            Новий пароль:
+                            <input type="password" value={editData.password} onChange={e => setEditData({ ...editData, password: e.target.value })} />
+                        </label>
+                        <div style={styles.buttonGroup}>
+                            <button onClick={handleSave} style={styles.button}>Зберегти</button>
+                            <button onClick={() => setEditingUser(null)} style={{ ...styles.button, backgroundColor: '#ccc' }}>Скасувати</button>
+                        </div>
+                    </div>
+                </div>
+            )}
         </div>
     );
 };
@@ -91,7 +136,6 @@ const styles: { [key: string]: React.CSSProperties } = {
         borderRadius: '10px',
         padding: '1.25rem',
         boxShadow: '0 2px 6px rgba(0,0,0,0.08)',
-        transition: 'transform 0.2s',
     },
     name: {
         margin: '0 0 0.5rem 0',
@@ -120,7 +164,23 @@ const styles: { [key: string]: React.CSSProperties } = {
         backgroundColor: 'var(--button-bg)',
         color: 'var(--button-text)',
         fontSize: '0.9rem',
-        transition: 'background-color 0.2s',
+    },
+    modalOverlay: {
+        position: 'fixed',
+        top: 0, left: 0, right: 0, bottom: 0,
+        backgroundColor: 'rgba(0,0,0,0.5)',
+        display: 'flex',
+        justifyContent: 'center',
+        alignItems: 'center',
+    },
+    modal: {
+        backgroundColor: '#fff',
+        padding: '2rem',
+        borderRadius: '10px',
+        width: '300px',
+        display: 'flex',
+        flexDirection: 'column',
+        gap: '1rem',
     },
 };
 
