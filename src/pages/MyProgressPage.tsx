@@ -2,6 +2,7 @@ import { useEffect, useState } from 'react';
 import { getReadingProgressByUser } from '../services/readingService';
 import { getBookById } from '../services/bookService';
 import { useTheme } from '../hooks/useTheme';
+import { useNavigate } from 'react-router-dom';
 import './MyProgressPage.css';
 
 interface ProgressEntry {
@@ -10,11 +11,12 @@ interface ProgressEntry {
     current_page: number;
     percentage_read: number;
     updated_at: string;
-    bookTitle?: string; // додано
+    bookTitle?: string;
 }
 
 const MyProgressPage = () => {
     useTheme();
+    const navigate = useNavigate();
     const [progress, setProgress] = useState<ProgressEntry[]>([]);
     const [loading, setLoading] = useState(true);
 
@@ -27,7 +29,6 @@ const MyProgressPage = () => {
 
                 const entries = await getReadingProgressByUser(userId);
 
-                // для кожного запису отримуємо дані книги
                 const withBookTitles = await Promise.all(
                     entries.map(async (entry: ProgressEntry) => {
                         try {
@@ -65,6 +66,12 @@ const MyProgressPage = () => {
                             <p>Поточна сторінка: {entry.current_page}</p>
                             <p>Прочитано: {entry.percentage_read}%</p>
                             <p>Оновлено: {new Date(entry.updated_at).toLocaleString()}</p>
+                            <button
+                                className="continue-button"
+                                onClick={() => navigate(`/read/${entry.book_id}`)}
+                            >
+                                Продовжити читання
+                            </button>
                         </div>
                     ))}
                 </div>

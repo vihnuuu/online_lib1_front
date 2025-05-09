@@ -1,11 +1,11 @@
-// src/services/readingService.ts
-import axiosInstance from '../components/axiosInstance'; // централізована конфігурація
+import axiosInstance from '../components/axiosInstance';
 
 // Створити новий запис про прогрес читання
 export const createReadingProgress = async (data: {
     user_id: string;
     book_id: string;
-    current_page: number;
+    current_page_cfi: string;           // Замість current_page
+    current_page_number?: number;        // Опціонально
     percentage_read: number;
 }) => {
     const response = await axiosInstance.post('/reading-progress', data);
@@ -22,8 +22,9 @@ export const getReadingProgressByUser = async (userId: string) => {
 export const updateReadingProgress = async (
     id: string,
     data: {
-        current_page: number;
-        percentage_read: number;
+        current_page_cfi?: string;
+        current_page_number?: number;
+        percentage_read?: number;
     }
 ) => {
     const response = await axiosInstance.put(`/reading-progress/${id}`, data);

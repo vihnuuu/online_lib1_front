@@ -1,6 +1,6 @@
 import React from 'react';
 import { Link, useNavigate } from 'react-router-dom';
-import axiosInstance from './axiosInstance'; // заміни на правильний шлях
+import axiosInstance from './axiosInstance';
 
 interface BookCardProps {
     id: string;
@@ -21,22 +21,34 @@ const BookCard: React.FC<BookCardProps> = ({
                                                description,
                                                isAdmin = false,
                                                onDelete,
-                                               onEdit
+                                               onEdit,
                                            }) => {
     const navigate = useNavigate();
     const userId = localStorage.getItem('userId');
 
     const handleStartReading = async () => {
+        if (!userId) return alert('Користувач не авторизований');
+
         try {
-            await axiosInstance.post('/reading-progress', {
-                user_id: userId,
-                book_id: id,
-                current_page: 1,
-                percentage_read: 0,
-            });
-            navigate(`/reading/${id}`);
+            // Спочатку пробуємо отримати прогрес
+            const res = await axiosInstance.get(`/reading-progress/${userId}`);
+            const existing = res.data.find((entry: any) => entry.book_id === id);
+
+            if (existing) {
+                // Якщо вже є прогрес → переходимо
+                navigate(`/read/${id}`);
+            } else {
+                // Інакше створюємо новий
+                await axiosInstance.post('/reading-progress', {
+                    user_id: userId,
+                    book_id: id,
+                    current_page: 0,
+                    percentage_read: 0,
+                });
+                navigate(`/read/${id}`);
+            }
         } catch (error) {
-            console.error('Не вдалося створити запис прогресу:', error);
+            console.error('Не вдалося запустити читання:', error);
             alert('Помилка при запуску читання');
         }
     };
@@ -45,7 +57,11 @@ const BookCard: React.FC<BookCardProps> = ({
         <div style={styles.card}>
             <h2 style={styles.title}>{title}</h2>
             <h4 style={styles.subtitle}>{author} • {genre}</h4>
-            <p style={styles.description}>{description}</p>
+            <p style={styles.description}>
+                {description.length > 250
+                    ? description.slice(0, 250) + '...'
+                    : description}
+            </p>
 
             <div style={styles.buttonContainer}>
                 {isAdmin ? (

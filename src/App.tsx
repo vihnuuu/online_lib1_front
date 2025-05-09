@@ -6,7 +6,6 @@ import BooksPage from './pages/BooksPage';
 import RegisterPage from './pages/RegisterPage';
 import LoginPage from './pages/LoginPage';
 import BookDetailsPage from './pages/BookDetailsPage';
-import UploadPage from './pages/UploadPage';
 import AboutUsPage from './pages/AboutUsPage';
 import MyProgressPage from './pages/MyProgressPage';
 import ContactUsPage from './pages/ContactUsPage';
@@ -14,7 +13,7 @@ import RequireAuth from './components/RequireAuth';
 import Navbar from './components/Navbar';
 import Footer from './components/Footer';
 import AdminPanel from './pages/AdminPanel/AdminPanel';
-
+import ReadBookPage from './pages/ReadBookPage';
 
 
 const App: React.FC = () => {
@@ -29,6 +28,8 @@ const App: React.FC = () => {
                 <Route path="/login" element={<LoginPage />} />
                 <Route path="/about" element={<AboutUsPage />} />
                 <Route path="/contact" element={<ContactUsPage />} />
+                <Route path="/read/:id" element={<ReadBookPage />} />
+
 
                 <Route path="/reading-progress" element={
                     <RequireAuth roles={['user', 'admin']}>
@@ -37,11 +38,6 @@ const App: React.FC = () => {
                 } />
 
                 {/* Захищений маршрут */}
-                <Route path="/upload" element={
-                    <RequireAuth roles={['admin']}>
-                        <UploadPage />
-                    </RequireAuth>
-                } />
                 <Route
                     path="/admin"
                     element={

@@ -174,7 +174,7 @@ const styles: { [key: string]: React.CSSProperties } = {
         alignItems: 'center',
     },
     modal: {
-        backgroundColor: '#fff',
+        backgroundColor: 'var(--card-bg)',
         padding: '2rem',
         borderRadius: '10px',
         width: '300px',
