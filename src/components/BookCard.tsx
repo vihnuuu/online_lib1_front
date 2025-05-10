@@ -74,12 +74,15 @@ const BookCard: React.FC<BookCardProps> = ({
                         <Link to={`/books/${id}`} style={styles.button}>
                             Переглянути
                         </Link>
-                        <button onClick={handleStartReading} style={styles.button}>
-                            Почати читання
-                        </button>
+                        {userId && (
+                            <button onClick={handleStartReading} style={styles.button}>
+                                Почати читання
+                            </button>
+                        )}
                     </>
                 )}
             </div>
+
         </div>
     );
 };

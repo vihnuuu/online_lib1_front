@@ -1,4 +1,4 @@
-import React, { useState } from 'react';
+import React, { useState, useEffect } from 'react';
 import SearchIcon from '@mui/icons-material/Search';
 
 interface BookFiltersProps {
@@ -6,29 +6,38 @@ interface BookFiltersProps {
 }
 
 const BookFilters: React.FC<BookFiltersProps> = ({ onFilterChange }) => {
-    const [field, setField] = useState(''); // Default to no specific field filter
+    const [field, setField] = useState('');
     const [query, setQuery] = useState('');
 
-    const handleSubmit = (e: React.FormEvent) => {
-        e.preventDefault();
-        console.log('handleSubmit викликано');
-        console.log('field:', field, 'query:', query);
+    const applyFilters = () => {
         const filters: { [key: string]: string } = {};
+        const trimmedQuery = query.trim();
 
-        if (field === 'genre') {
-            filters.genre = query;
-        } else if (field === 'author') {
-            filters.author = query;
-        } else if (query) {
-            filters.query = query;
+        if (field === 'genre' && trimmedQuery) {
+            filters.genre = trimmedQuery;
+        } else if (field === 'author' && trimmedQuery) {
+            filters.author = trimmedQuery;
+        } else if (trimmedQuery) {
+            filters.query = trimmedQuery;
         }
 
-        console.log('filters:', filters);
         onFilterChange(filters);
     };
 
+    const handleKeyPress = (e: React.KeyboardEvent<HTMLInputElement>) => {
+        if (e.key === 'Enter') {
+            e.preventDefault();
+            applyFilters();
+        }
+    };
+
+    useEffect(() => {
+        setQuery(''); // Очищаем поле при смене фильтра
+        applyFilters();
+    }, [field]);
+
     return (
-        <form onSubmit={handleSubmit} style={styles.form}>
+        <form style={styles.form} onSubmit={(e) => e.preventDefault()}>
             <select
                 value={field}
                 onChange={(e) => setField(e.target.value)}
@@ -43,11 +52,17 @@ const BookFilters: React.FC<BookFiltersProps> = ({ onFilterChange }) => {
                 type="text"
                 placeholder="Пошук"
                 value={query}
-                onChange={(e) => setQuery(e.target.value)}
+                onChange={(e) => setQuery(e.target.value.trimStart())} // Удаляем пробелы в начале сразу
+                onBlur={applyFilters}
+                onKeyPress={handleKeyPress}
                 style={styles.input}
             />
 
-            <button type="submit" style={styles.button}>
+            <button
+                type="button"
+                style={styles.button}
+                onClick={applyFilters}
+            >
                 <SearchIcon />
             </button>
         </form>
