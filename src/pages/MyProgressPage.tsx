@@ -8,7 +8,7 @@ import './MyProgressPage.css';
 interface ProgressEntry {
     id: string;
     book_id: string;
-    current_page: number;
+    current_page_cfi: string;
     percentage_read: number;
     updated_at: string;
     bookTitle?: string;
@@ -52,8 +52,7 @@ const MyProgressPage = () => {
     }, [userId]);
 
     return (
-        <div className="progress-page">
-            <h1>Мій прогрес читання</h1>
+        <div className="my-progress-page">
             {loading ? (
                 <p>Завантаження...</p>
             ) : progress.length === 0 ? (
@@ -63,9 +62,9 @@ const MyProgressPage = () => {
                     {progress.map((entry) => (
                         <div key={entry.id} className="progress-card">
                             <h3>{entry.bookTitle}</h3>
-                            <p>Поточна сторінка: {entry.current_page}</p>
                             <p>Прочитано: {entry.percentage_read}%</p>
                             <p>Оновлено: {new Date(entry.updated_at).toLocaleString()}</p>
+
                             <button
                                 className="continue-button"
                                 onClick={() => navigate(`/read/${entry.book_id}`)}

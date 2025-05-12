@@ -17,52 +17,58 @@ const ReadingPage = () => {
     const [book, setBook] = useState<Book | null>(null);
     const [page, setPage] = useState<number>(0);
     const [progress, setProgress] = useState<number>(0);
+    const [loading, setLoading] = useState<boolean>(true);
 
     useEffect(() => {
         const fetchBook = async () => {
             if (bookId) {
-                const bookData = await getBookById(bookId);
-                setBook(bookData);
+                try {
+                    const bookData = await getBookById(bookId);
+                    setBook(bookData);
+
+                    const savedProgress = localStorage.getItem(`progress-${bookId}`);
+                    const savedPage = savedProgress ? parseInt(savedProgress, 10) : 0;
+
+                    setPage(savedPage);
+                    setProgress(
+                        bookData.totalPages > 0
+                            ? Math.round((savedPage / bookData.totalPages) * 100)
+                            : 0
+                    );
+                } catch (err) {
+                    console.error('Failed to load book:', err);
+                } finally {
+                    setLoading(false);
+                }
             }
         };
 
         fetchBook();
     }, [bookId]);
 
-    useEffect(() => {
-        if (!book || !book.totalPages) return;
-
-        const savedProgress = localStorage.getItem(`progress-${bookId}`);
-        if (savedProgress) {
-            const savedPage = parseInt(savedProgress);
-            setPage(savedPage);
-            setProgress(Math.round((savedPage / book.totalPages) * 100));
-        }
-    }, [book, bookId]);
+    const updatePage = (newPage: number) => {
+        if (!book) return;
+        setPage(newPage);
+        const newProgress = Math.round((newPage / book.totalPages) * 100);
+        setProgress(newProgress);
+        localStorage.setItem(`progress-${bookId}`, newPage.toString());
+        void updateReadingProgress(bookId!, newPage);
+    };
 
     const handleNextPage = () => {
-        if (!book) return;
-        if (page < book.totalPages - 1) {
-            const newPage = page + 1;
-            setPage(newPage);
-            setProgress(Math.round((newPage / book.totalPages) * 100));
-            localStorage.setItem(`progress-${bookId}`, newPage.toString());
-            void updateReadingProgress(bookId!, newPage); // позбавляємось warning'у
+        if (book && page < book.totalPages - 1) {
+            updatePage(page + 1);
         }
     };
 
     const handlePreviousPage = () => {
-        if (!book) return;
-        if (page > 0) {
-            const newPage = page - 1;
-            setPage(newPage);
-            setProgress(Math.round((newPage / book.totalPages) * 100));
-            localStorage.setItem(`progress-${bookId}`, newPage.toString());
-            void updateReadingProgress(bookId!, newPage);
+        if (book && page > 0) {
+            updatePage(page - 1);
         }
     };
 
-    if (!book) return <div>Завантаження...</div>;
+    if (loading) return <div>Завантаження книги...</div>;
+    if (!book) return <div>Книга не знайдена.</div>;
 
     return (
         <div className="reading-page">
@@ -71,9 +77,13 @@ const ReadingPage = () => {
             <p>{book.description}</p>
 
             <div className="reading-controls">
-                <button onClick={handlePreviousPage} disabled={page === 0}>Попередня сторінка</button>
+                <button onClick={handlePreviousPage} disabled={page === 0}>
+                    Попередня сторінка
+                </button>
                 <span>Сторінка {page + 1} з {book.totalPages}</span>
-                <button onClick={handleNextPage} disabled={page === book.totalPages - 1}>Наступна сторінка</button>
+                <button onClick={handleNextPage} disabled={page === book.totalPages - 1}>
+                    Наступна сторінка
+                </button>
             </div>
 
             <div className="reading-progress">

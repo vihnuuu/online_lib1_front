@@ -7,8 +7,10 @@ import './login.css';
 
 interface JwtPayload {
     role: string;
-    sub: string; // це userId
+    member_id: string;
+    sub?: string;
 }
+
 
 const LoginPage: React.FC = () => {
     useTheme();
@@ -39,7 +41,7 @@ const LoginPage: React.FC = () => {
             localStorage.setItem('accessToken', accessToken);
             localStorage.setItem('refreshToken', refreshToken);
             localStorage.setItem('role', decoded.role);
-            localStorage.setItem('userId', decoded.sub);
+            localStorage.setItem('userId', decoded.member_id);
 
             setSuccess('Login successful! Redirecting...');
             setTimeout(() => navigate('/'), 1500);

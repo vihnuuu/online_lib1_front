@@ -42,7 +42,7 @@ const BookCard: React.FC<BookCardProps> = ({
                 await axiosInstance.post('/reading-progress', {
                     user_id: userId,
                     book_id: id,
-                    current_page: 0,
+                    current_page_cfi: '', // Пустая строка - корректное значение
                     percentage_read: 0,
                 });
                 navigate(`/read/${id}`);
