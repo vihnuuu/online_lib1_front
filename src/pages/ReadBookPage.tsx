@@ -6,7 +6,7 @@ import {
     getReadingProgressByUser,
     updateReadingProgress,
 } from '../services/readingService';
-import ePub, { Rendition, Location } from 'epubjs';
+import ePub, { Rendition, Location} from 'epubjs';
 
 interface Book {
     id: string;
@@ -40,12 +40,10 @@ const ReadBookPage: React.FC = () => {
     const [isFullscreen, setIsFullscreen] = useState(false);
     const [fontSize, setFontSize] = useState(16);
 
-    const [currentPageNumber, setCurrentPageNumber] = useState<number>(0);
-
+    const [percentageRead, setPercentageRead] = useState<number>(0);
 
     const viewerRef = useRef<HTMLDivElement>(null);
     const renditionRef = useRef<Rendition | null>(null);
-
 
     const fetchBookData = useCallback(async () => {
         if (!id || !userId) return;
@@ -74,7 +72,7 @@ const ReadBookPage: React.FC = () => {
     }, [fetchBookData]);
 
     useEffect(() => {
-        if (!book || !viewerRef.current) return;
+        if (!book || !viewerRef.current || !progressId) return; // Дочекайся progressId
 
         const bookInstance = ePub(book.file_url);
         const rendition = bookInstance.renderTo(viewerRef.current, {
@@ -101,67 +99,67 @@ const ReadBookPage: React.FC = () => {
         rendition.themes.select('custom');
         renditionRef.current = rendition;
 
-        if (!currentLocation) {
-            rendition.display();
-        } else {
-            rendition.display(currentLocation);
-        }
-
-        bookInstance.loaded.navigation.then(nav => setToc(nav.toc));
-
         let timeout: NodeJS.Timeout | null = null;
 
-        rendition.on('relocated', async (location: Location) => {
-            if (timeout) clearTimeout(timeout);
-            timeout = setTimeout(async () => {
-                const cfi = location.start.cfi;
-                setCurrentLocation(cfi);
-
-                if (progressId) {
-                    await updateReadingProgress(progressId, {
-                        current_page_cfi: cfi,
-                        percentage_read: Math.round(location.start.percentage * 100),
-                    });
+        bookInstance.ready
+            .then(() => bookInstance.locations.generate())
+            .then(() => {
+                if (currentLocation) {
+                    return rendition.display(currentLocation);
+                } else {
+                    return rendition.display();
                 }
-            }, 500);
-        });
+            })
+            .then(() => {
+                rendition.on('relocated', async (location: Location) => {
+                    if (timeout) clearTimeout(timeout);
+                    timeout = setTimeout(async () => {
+                        const cfi = location.start.cfi;
+                        setCurrentLocation(cfi);
 
+                        const overallProgress = bookInstance.locations.percentageFromCfi(cfi);
+                        const percentage = Math.round(overallProgress * 100);
+                        const is_finished = percentage >= 100;
+
+                        setPercentageRead(percentage);
+
+                        if (progressId) {
+                            console.log('📥 Saving progress', {
+                                id: progressId,
+                                cfi,
+                                percentage,
+                                is_finished,
+                            });
+
+                            await updateReadingProgress(progressId, {
+                                current_page_cfi: cfi,
+                                percentage_read: percentage,
+                                is_finished,
+                            });
+                        } else {
+                            console.warn('⚠️ progressId is null, skipping update');
+                        }
+                    }, 500);
+                });
+
+
+                bookInstance.loaded.navigation.then((nav) => setToc(nav.toc));
+            });
 
         return () => {
             rendition.destroy();
             bookInstance.destroy();
         };
-    }, [book, fontSize]);
-
-    const updateProgress = async () => {
-        const location = renditionRef.current?.location;
-        if (!location || !progressId) return;
-
-        const cfi = location.start.cfi;
-        const currentPage = location.start.displayed.page;
-        const totalPages = location.start.displayed.total;
-
-        await updateReadingProgress(progressId, {
-            current_page_cfi: cfi,
-            current_page_number: currentPage,
-            percentage_read: Math.round((currentPage / totalPages) * 100),
-        });
-
-        setCurrentLocation(cfi);
-        setCurrentPageNumber(currentPage);
-    };
+    }, [book, fontSize, progressId]);
 
 
     const handleNext = async () => {
         await renditionRef.current?.next();
-        await updateProgress();
     };
 
     const handlePrev = async () => {
         await renditionRef.current?.prev();
-        await updateProgress();
     };
-
 
     const toggleFullscreen = () => {
         const elem = viewerRef.current;
@@ -196,7 +194,7 @@ const ReadBookPage: React.FC = () => {
         renditionRef.current?.themes.override('font-size', `${newSize}px`);
     };
 
-    if (!book) return <div>Downloading the book...</div>;
+    if (!book) return <div>Завантаження книги...</div>;
 
     return (
         <div style={{ display: 'flex', height: '100vh', background: 'var(--bg-color)', color: 'var(--text-color)' }}>
@@ -208,7 +206,7 @@ const ReadBookPage: React.FC = () => {
                     background: 'var(--card-bg)',
                     borderRight: '1px solid var(--card-border)',
                 }}>
-                    <h3>Content</h3>
+                    <h3>Зміст</h3>
                     <ul style={{ listStyle: 'none', padding: 0 }}>
                         {toc.map((item, idx) => (
                             <li key={idx}>
@@ -221,7 +219,7 @@ const ReadBookPage: React.FC = () => {
                                         fontSize: '0.95rem',
                                         padding: '0.3rem 0',
                                         textAlign: 'left',
-                                        color:'var(--text-color)'
+                                        color: 'var(--text-color)'
                                     }}
                                 >
                                     {item.label}
@@ -233,7 +231,7 @@ const ReadBookPage: React.FC = () => {
                         onClick={() => setShowToc(false)}
                         style={styles.toggleButton}
                     >
-                        Hide Content
+                        Сховати зміст
                     </button>
                 </aside>
             )}
@@ -247,7 +245,7 @@ const ReadBookPage: React.FC = () => {
             }}>
                 <h1>{book.title}</h1>
                 <h3>{book.author}</h3>
-                <p>Поточна сторінка: {currentPageNumber}</p>
+                <p>Прогрес: {percentageRead}%</p>
 
                 <div
                     ref={viewerRef}
@@ -278,14 +276,14 @@ const ReadBookPage: React.FC = () => {
                     maxWidth: '800px',
                     marginTop: '1rem'
                 }}>
-                    <button onClick={handlePrev} style={navButtonStyle}>Back</button>
+                    <button onClick={handlePrev} style={navButtonStyle}>Назад</button>
                     <button onClick={toggleFullscreen} style={navButtonStyle}>
-                        {isFullscreen ? 'Exit Fullscreen' : 'Fullscreen'}
+                        {isFullscreen ? 'Вийти з повного екрану' : 'Повний екран'}
                     </button>
                     <button onClick={() => setShowToc(!showToc)} style={navButtonStyle}>
-                        {showToc ? 'Hide Content' : 'Show Content'}
+                        {showToc ? 'Сховати зміст' : 'Показати зміст'}
                     </button>
-                    <button onClick={handleNext} style={navButtonStyle}>Forward</button>
+                    <button onClick={handleNext} style={navButtonStyle}>Вперед</button>
                     <button onClick={increaseFontSize} style={navButtonStyle}>A+</button>
                     <button onClick={decreaseFontSize} style={navButtonStyle}>A-</button>
                 </div>

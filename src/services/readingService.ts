@@ -25,6 +25,7 @@ export const updateReadingProgress = async (
         current_page_cfi?: string;
         current_page_number?: number;
         percentage_read?: number;
+        is_finished?: boolean;
     }
 ) => {
     const response = await axiosInstance.put(`/reading-progress/${id}`, data);
