@@ -56,3 +56,9 @@ export const deleteBook = async (id: string) => {
     const response = await axiosInstance.delete(`${API_URL}/${id}`);
     return response.data;
 };
+
+export const getRecommendedBooks = async (bookId: string) => {
+    const response = await axiosInstance.get(`/books/recommendations/${bookId}`);
+    return response.data;
+};
+

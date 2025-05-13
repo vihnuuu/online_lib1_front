@@ -1,5 +1,4 @@
 import React, { useEffect, useRef, useState, useCallback } from 'react';
-import { useParams } from 'react-router-dom';
 import { getBookById } from '../services/bookService';
 import {
     createReadingProgress,
@@ -7,6 +6,10 @@ import {
     updateReadingProgress,
 } from '../services/readingService';
 import ePub, { Rendition, Location} from 'epubjs';
+import { getRecommendedBooks } from '../services/bookService';
+import { Link, useParams } from 'react-router-dom';
+
+
 
 interface Book {
     id: string;
@@ -39,6 +42,7 @@ const ReadBookPage: React.FC = () => {
     const [showToc, setShowToc] = useState(true);
     const [isFullscreen, setIsFullscreen] = useState(false);
     const [fontSize, setFontSize] = useState(16);
+    const [recommended, setRecommended] = useState<Book[]>([]);
 
     const [percentageRead, setPercentageRead] = useState<number>(0);
 
@@ -136,9 +140,19 @@ const ReadBookPage: React.FC = () => {
                                 percentage_read: percentage,
                                 is_finished,
                             });
+
+                            if (is_finished && recommended.length === 0) {
+                                try {
+                                    const recs = await getRecommendedBooks(book.id);
+                                    setRecommended(recs);
+                                } catch (error) {
+                                    console.error('❌ Помилка при отриманні рекомендацій:', error);
+                                }
+                            }
                         } else {
                             console.warn('⚠️ progressId is null, skipping update');
                         }
+
                     }, 500);
                 });
 
@@ -247,6 +261,32 @@ const ReadBookPage: React.FC = () => {
                 <h3>{book.author}</h3>
                 <p>Прогрес: {percentageRead}%</p>
 
+                {recommended.length > 0 && (
+                    <div style={{ marginTop: '2rem', textAlign: 'center' }}>
+                        <h3>Рекомендовані книги</h3>
+                        <ul style={{ listStyle: 'none', padding: 0 }}>
+                            {recommended.map((rec) => (
+                                <li key={rec.id} style={{ marginBottom: '1rem' }}>
+                                    <Link
+                                        to={`/read/${rec.id}`}
+                                        style={{
+                                            color: 'var(--link-color)',
+                                            textDecoration: 'none',
+                                            fontWeight: 'bold',
+                                            fontSize: '1.1rem',
+                                        }}
+                                    >
+                                        {rec.title}
+                                    </Link>{' '}
+                                    <span style={{ fontStyle: 'italic', color: 'var(--text-color)' }}>
+                        — {rec.author}
+                    </span>
+                                </li>
+                            ))}
+                        </ul>
+                    </div>
+                )}
+
                 <div
                     ref={viewerRef}
                     onClick={(e) => {
@@ -287,6 +327,10 @@ const ReadBookPage: React.FC = () => {
                     <button onClick={increaseFontSize} style={navButtonStyle}>A+</button>
                     <button onClick={decreaseFontSize} style={navButtonStyle}>A-</button>
                 </div>
+
+
+
+
             </main>
         </div>
     );
