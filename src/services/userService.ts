@@ -1,4 +1,4 @@
-import axiosInstance from '../components/axiosInstance'; // твій axios з Bearer-токеном
+import axiosInstance from '../components/axiosInstance';
 
 const API_URL = '/users';
 

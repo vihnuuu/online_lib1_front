@@ -11,7 +11,7 @@ const BooksTab: React.FC = () => {
         author: '',
         genre: '',
         description: '',
-        file_url: '',
+        file_url: 'https://cdn.jsdelivr.net/gh/vihnuuu/book-files@main/',
         publication_year: new Date().getFullYear(),
     });
 
